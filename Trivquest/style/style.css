@@ -1,0 +1,20 @@
+.bc{background-color: #eee;}
+.marginr{margin-right:10px;}
+.marginl{margin-left:20px;}
+.marginb{margin-bottom: 10px;}
+.border{border: solid 1px}
+
+
+#gameContainer
+{
+
+
+}
+/*http://acmetech.github.io/todc-bootstrap-3/examples/equal-height-columns/*/
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display:         flex;
+}
+
