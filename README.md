@@ -1,3 +1,3 @@
 1DV408-Projekt
 ==============
-<p>Ett textbaserat rpg spel (dungeon-crawler).</p>
+<p>Ett trivia/fråge-spel med små rpg element.</p>
