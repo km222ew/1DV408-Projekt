@@ -4,11 +4,19 @@ class ProfileModel
 {
     private $notify;
     private $userRep;
+    private $removeTwoPrice;
+    private $skipPrice;
+    private $removeTwoAmount;
+    private $skipAmount;
 
     public function __construct(Notify $notify)
     {
         $this->notify = $notify;
         $this->userRep = new UserRepository();
+        $this->removeTwoPrice = 250;
+        $this->skipPrice = 500;
+        $this->removeTwoAmount = 1;
+        $this->skipAmount = 1;
     }
 
     public function getUserData($username)
@@ -18,19 +26,46 @@ class ProfileModel
         return $user;
     }
 
-    public function addRemoveTwo()
+    public function addRemoveTwo($username)
     {
-        //TODO:Addremovetwo
+        if($this->removeGold($username, $this->removeTwoPrice))
+        {
+            $this->userRep->updateUserRemoveTwo($username, $this->removeTwoAmount);
+            $this->notify->success('You have successfully bought ('.$this->removeTwoAmount.') 50/50.');
+        }
+        else
+        {
+            $this->notify->error("You don't have enough gold to buy a 50/50.");
+        }
     }
 
-    public function addSkip()
+    public function addSkip($username)
     {
-        //TODO:Addskip
+        if($this->removeGold($username, $this->skipPrice))
+        {
+            $this->userRep->updateUserSkip($username, $this->skipAmount);
+            $this->notify->success('You have successfully bought ('.$this->skipAmount.') Skip.');
+        }
+        else
+        {
+            $this->notify->error("You don't have enough gold to buy a Skip.");
+        }
     }
 
-    public function removeGold()
+    private function removeGold($username, $cost)
     {
-        //TODO:Removegold
+        $user = $this->getUserData($username);
+
+        if($user->getGold() >= $cost)
+        {
+            $this->userRep->updateUserGold($username, -$cost);
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 

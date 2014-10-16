@@ -9,6 +9,11 @@ class GameModel
         $this->notify = $notify;
     }
 
+    public function getQuestions()
+    {
+        //TODO:Getquestions
+    }
+
     public function newGame()
     {
         //TODO:Newgame
@@ -17,6 +22,16 @@ class GameModel
     public function removeLife()
     {
         //TODO:Removelife
+    }
+
+    public function removeRemoveTwo()
+    {
+        //TODO:RemoveRemoveTwo
+    }
+
+    public function removeSkip()
+    {
+        //TODO:RemoveSkip
     }
 
     public function addGold()

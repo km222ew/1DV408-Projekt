@@ -9,11 +9,6 @@ class GameView
 
     public function renderGameField()
     {
-        $question = "Vad heter jag?";
-        $current = 1;
-        $total = 10;
-
-
 
         $body = "<div id='container'>
                     <div class='row'>
@@ -60,10 +55,10 @@ class GameView
                         <div class='col-lg-9'>
                             <div class='panel panel-primary'>
                                 <div class='panel-heading'>
-                                    <h3 class='panel-title'>Question $current / $total</h3>
+                                    <h3 class='panel-title'>Question 1/10 </h3>
                                 </div>
                                 <div class='panel-body'>
-                                    <h2>$question</h2>
+                                    <h2></h2>
                                 </div>
                             </div>
 
@@ -103,7 +98,7 @@ class GameView
                                             <span class='input-group-addon'>
                                                 <input type='radio' name='answer'>
                                             </span>
-                                            <input type='text' class='form-control' disabled value='Kung david den 555'>
+                                            <input type='text' class='form-control' disabled value=''>
                                         </div><!-- /input-group -->
                                     </div><!-- /.col-lg-6 -->
                                 </div>

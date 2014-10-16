@@ -2,14 +2,16 @@
 
 class ProfileView
 {
+    private $action;
+
     public function __construct()
     {
-
+        $this->action = 'action';
     }
 
     public function didBuyRemoveTwo()
     {
-        if (isset($_GET['action']) && $_GET['action'] == 'buy&item=removetwo') {
+        if (isset($_GET[$this->action]) && $_GET[$this->action] == 'buy=item=removetwo') {
             return true;
         }
         else
@@ -20,7 +22,7 @@ class ProfileView
 
     public function didBuySkip()
     {
-        if (isset($_GET['action']) && $_GET['action'] == 'buy&item=skip') {
+        if (isset($_GET[$this->action]) && $_GET[$this->action] == 'buy=item=skip') {
             return true;
         }
         else
@@ -33,7 +35,9 @@ class ProfileView
     {
         $body = "<div class='row row-eq-height'>
                     <div class='col-lg-5 marginr bc'>
-                        <h1 class='text-center'>Profile</h1>
+                        <div class='text-center'>
+                            <h1><a href='?action=".NavigationView::$actionShowProfile."'>Profile</a></h1>
+                        </div>
                         <h2 class='text-center'>$username</h2>
                         <h3 class='text-center'>Level : $level</h3>
                         <h4 class='text-center'>Exp : $exp/$expToNextLevel</h4>
@@ -82,7 +86,7 @@ class ProfileView
                     <div class='col-lg-7 bc'>
                     <h1 class='text-center'>Instructions</h1>
                         <p>
-                            Gheejn jnasdfjnsrjn jsetjdi jn .
+
                         </p>
                         <div class='text-center marginb'>
                             <a href='?action=".NavigationView::$actionPlay."' class='btn btn-lg btn-primary'>Start new round</a>

@@ -46,6 +46,10 @@ class NavigationController
                     case NavigationView::$actionPlay:
                         $controller = new GameController();
                         return $controller->showGameField();
+                    default:
+                        $controller = new ProfileController($notify);
+                        return $controller->showProfile($loginModel->getUsername());
+                        break;
 
                 }
             }

@@ -7,20 +7,43 @@ class LoginView {
 	private $model;
 	public $cookieService;
 
+    //Strings
+    private $username;
+    private $inputUsername;
+    private $password;
+    private $remember;
+    private $tokenPass;
+    private $userAgent;
+    private $userIp;
+    private $login;
+    private $action;
+    private $register;
+
     public function __construct(LoginModel $model)
     {
         $this->model = $model;
         $this->cookieService = new CookieService;
+
+        $this->username = 'username';
+        $this->inputUsername = 'inputUsername';
+        $this->password = 'password';
+        $this->remember = 'remember';
+        $this->tokenPass = 'tokenPass';
+        $this->userAgent = 'HTTP_USER_AGENT';
+        $this->userIp = 'REMOTE_ADDR';
+        $this->login = 'login';
+        $this->action = 'action';
+        $this->register = 'register';
     }
 
 	//Get username from post
 	public function getUsername()
     {
-		if (isset($_POST['username']))
+		if (isset($_POST[$this->username]))
         {
 			//Save username in cookie to remember input
-			$this->cookieService->save('inputUsername', $_POST['username'], time()+3);
-			return trim($_POST['username']);
+			$this->cookieService->save($this->inputUsername, $_POST[$this->username], time()+3);
+			return trim($_POST[$this->username]);
 		}
 		
 		return '';
@@ -29,10 +52,9 @@ class LoginView {
 	//Get password from post
 	public function getPassword()
     {
-		if (isset($_POST['password']) && $_POST['password'] != '')
+		if (isset($_POST[$this->password]) && $_POST[$this->password] != '')
         {
-			return trim($_POST['password']);
-			//return $password = crypt($_POST['password'], $this->getUsername());
+			return trim($_POST[$this->password]);
 		}
 
 		return '';
@@ -41,9 +63,8 @@ class LoginView {
 	//Remember user?
 	public function getRemember()
     {
-		if (isset($_POST['remember']))
+		if (isset($_POST[$this->remember]))
         {
-			//return $_POST['remember'];
             return true;
 		}
         else
@@ -55,31 +76,31 @@ class LoginView {
     //Get username stored in cookie
     public function getUsernameCookie()
     {
-        return $_COOKIE['username'];
+        return $_COOKIE[$this->username];
     }
 
     //Get token stored in cookie
     public function getTokenPassCookie()
     {
-        return $_COOKIE['tokenpass'];
+        return $_COOKIE[$this->tokenPass];
     }
 
 	//Get client browser info
 	public function getUserAgent()
     {
-		return $_SERVER['HTTP_USER_AGENT'];
+		return $_SERVER[$this->userAgent];
 	}
 
     //Get client ip
     public function getUserIp()
     {
-        return $_SERVER["REMOTE_ADDR"];
+        return $_SERVER[$this->userIp];
     }
 
 	//Did user request login?
 	public function didLogin()
     {
-		if (isset($_POST['login']))
+		if (isset($_POST[$this->login]))
         {
 			return true;
 		}
@@ -89,21 +110,10 @@ class LoginView {
 		}
 	}
 
-	//Did user request to be logged out?
-	public function didLogout()
-    {
-		if (isset($_GET['action']) && $_GET['action'] == 'logout') {
-			return true;
-		}
-        else
-        {
-			return false;
-		}
-	}
-
+    //Did user go to register page
     public function goToRegister()
     {
-        if(isset($_GET['action']) && $_GET['action'] == 'register')
+        if(isset($_GET[$this->action]) && $_GET[$this->action] == $this->register)
         {
             return true;
         }
@@ -123,7 +133,7 @@ class LoginView {
 	public function login()
     {
 
-		$username = $this->cookieService->load('inputUsername');
+		$printUsername = $this->cookieService->load($this->inputUsername);
 
 		$body = "
 				<a href='?action=".NavigationView::$actionRegister."' class='btn btn-lg btn-primary'>Registrera en ny användare</a>
@@ -131,13 +141,13 @@ class LoginView {
 				<form action='?action=".NavigationView::$actionShowProfile."' method='post'>
 					<fieldset>
 						<legend>Skriv in användarnamn och lösenord</legend>
-						<label for='username'>Username</label>
-						<input type='text' id='username' name='username' value='$username'>
-						<label for='password'>Password</label>
-						<input type='password' id='password' name='password'>
-						<label for='remember'>Håll mig inloggad</label>
-						<input type='checkbox' id='remember' name='remember'>
-						<button type='submit' name='login' class='btn btn-primary'>Logga in</button>
+						<label for=$this->username>Username</label>
+						<input type='text' id=$this->username name=$this->username value='$printUsername'>
+						<label for=$this->password>Password</label>
+						<input type='password' id=$this->password name=$this->password>
+						<label for=$this->remember>Håll mig inloggad</label>
+						<input type='checkbox' id=$this->remember name=$this->remember>
+						<button type='submit' name=$this->login class='btn btn-primary'>Sign in</button>
 					</fieldset>
 				</form>";
 
@@ -148,21 +158,33 @@ class LoginView {
     {
         $time = time()+60;
 
-        setcookie("username", $username, $time);
-        setcookie("tokenpass", $tokenPass, $time);
+        setcookie($this->username, $username, $time);
+        setcookie($this->tokenPass, $tokenPass, $time);
 
         return $time;
     }
 
     public function deleteCookies()
     {
-        setcookie("username", "", time()-1);
-        setcookie("tokenpass","", time()-1);
+        setcookie($this->username, "", time()-1);
+        setcookie($this->tokenPass,"", time()-1);
     }
 
-    public function cookiesExist()
+    public function tokenPasscookiesExist()
     {
-        if(isset($_COOKIE['username']) === true && isset($_COOKIE["tokenpass"]) === true)
+        if(isset($_COOKIE[$this->tokenPass]) === true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function usernameCookieExist()
+    {
+        if(isset($_COOKIE[$this->username]) === true)
         {
             return true;
         }

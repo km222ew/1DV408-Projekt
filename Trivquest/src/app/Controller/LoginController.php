@@ -9,6 +9,7 @@ class LoginController {
     private $registerModel;
 	private $view;
     private $registerView;
+    private $notify;
 
 	public function __construct(LoginModel $loginModel, LoginView $loginView, Notify $notify)
     {
@@ -16,6 +17,7 @@ class LoginController {
         $this->registerModel = new RegisterModel($notify);
 		$this->view = $loginView;
         $this->registerView = new RegisterView();
+        $this->notify = $notify;
 	}
 
     //Create new cookies on login with cookies
@@ -58,7 +60,7 @@ class LoginController {
         $this->model->logOut();
 
         //If there are cookies present, delete them
-        if($this->view->cookiesExist())
+        if($this->view->usernameCookieExist() || $this->view->tokenPasscookiesExist())
         {
             $this->view->deleteCookies();
         }
@@ -66,7 +68,7 @@ class LoginController {
 
     public function doCookieLogin()
     {
-        if($this->view->cookiesExist())
+        if($this->view->usernameCookieExist() && $this->view->tokenPasscookiesExist())
         {
             if($this->model->loginWithCookies($this->view->getUsernameCookie(), $this->view->getTokenPassCookie(),
                 $this->view->getUserIP(), $this->view->getUserAgent()))
@@ -81,6 +83,11 @@ class LoginController {
                 $this->view->deleteCookies();
                 return false;
             }
+        }
+        else if($this->view->usernameCookieExist() || $this->view->tokenPasscookiesExist())
+        {
+            $this->view->deleteCookies();
+            return false;
         }
     }
 

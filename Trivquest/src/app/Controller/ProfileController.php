@@ -14,20 +14,23 @@ class ProfileController
         $this->profileModel = new ProfileModel($notify);
     }
 
+    public function getUser($username)
+    {
+        return $this->profileModel->getUserData($username);
+    }
+
     public function buyRemoveTwo($username)
     {
-
+        $this->profileModel->addRemoveTwo($username);
     }
 
     public function buySkip($username)
     {
-
+        $this->profileModel->addSkip($username);
     }
 
     public function showProfile($username)
     {
-        $user = $this->profileModel->getUserData($username);
-
         if($this->profileView->didBuyRemoveTwo())
         {
             $this->buyRemoveTwo($username);
@@ -37,6 +40,8 @@ class ProfileController
         {
             $this->buySkip($username);
         }
+
+        $user = $this->getUser($username);
 
         return $this->profileView->renderProfile($user->getUsername(), $user->getLevel(), $user->getExp(),
                                                  $user->getExpToNextLevel(), $user->getRemoveTwo(), $user->getSkip(),

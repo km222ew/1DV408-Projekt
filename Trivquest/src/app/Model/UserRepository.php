@@ -13,7 +13,7 @@ class UserRepository extends Repository
     private static $skip = "skip";
     private static $removeTwo = "removetwo";
     private static $exp = "exp";
-    private static $expToNextLevel = "exp";
+    private static $expToNextLevel = "exptonextlevel";
     private static $level = "level";
 
 
@@ -78,17 +78,50 @@ class UserRepository extends Repository
 
     public function updateUserRemoveTwo($username, $value)
     {
+        try
+        {
+            $sql = "UPDATE $this->dbTable SET ". self::$removeTwo . "=". self::$removeTwo . "+? WHERE " . self::$username . "= ?";
+            $params = array($value, $username);
 
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 1");
+        }
     }
 
     public function updateUserSkip($username, $value)
     {
+        try
+        {
+            $sql = "UPDATE $this->dbTable SET ". self::$skip . "=". self::$skip . "+? WHERE " . self::$username . "= ?";
+            $params = array($value, $username);
 
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 2");
+        }
     }
 
     public function updateUserGold($username, $value)
     {
+        try
+        {
+            $sql = "UPDATE $this->dbTable SET ". self::$gold . "=". self::$gold . "+? WHERE " . self::$username . "= ?";
+            $params = array($value, $username);
 
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 3");
+        }
     }
 
     public function updateUserExp($username, $value)
