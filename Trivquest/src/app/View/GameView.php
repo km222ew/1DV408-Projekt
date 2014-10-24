@@ -7,9 +7,8 @@ class GameView
 
     }
 
-    public function renderGameField()
+    public function renderGameField($removeTwo, $skip)
     {
-
         $body = "<div id='container'>
                     <div class='row'>
                         <div class='col-lg-3'>
@@ -34,7 +33,7 @@ class GameView
                                         </div><!-- /.col-lg-6 -->
 
                                         <div class='col-lg-6 text-right'>
-                                            <h2><span class='label label-info'> x 5</span></h2>
+                                            <h2><span class='label label-info'> x $removeTwo</span></h2>
                                         </div><!-- /.col-lg-6 -->
                                     </div>
 
@@ -44,7 +43,7 @@ class GameView
                                         </div><!-- /.col-lg-6 -->
 
                                         <div class='col-lg-6 text-right'>
-                                            <h2><span class='label label-info'> x 5</span></h2>
+                                            <h2><span class='label label-info'> x $skip</span></h2>
                                         </div><!-- /.col-lg-6 -->
                                     </div>
                                 </div>

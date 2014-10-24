@@ -1,5 +1,8 @@
 <?php
 
+require_once("DAL/UserRepository.php");
+require_once("User.php");
+
 class ProfileModel
 {
     private $notify;
@@ -31,7 +34,7 @@ class ProfileModel
         if($this->removeGold($username, $this->removeTwoPrice))
         {
             $this->userRep->updateUserRemoveTwo($username, $this->removeTwoAmount);
-            $this->notify->success('You have successfully bought ('.$this->removeTwoAmount.') 50/50.');
+            $this->notify->success('You have successfully bought ('.$this->removeTwoAmount.') 50/50 for '.$this->removeTwoPrice.' gold.');
         }
         else
         {
@@ -44,7 +47,7 @@ class ProfileModel
         if($this->removeGold($username, $this->skipPrice))
         {
             $this->userRep->updateUserSkip($username, $this->skipAmount);
-            $this->notify->success('You have successfully bought ('.$this->skipAmount.') Skip.');
+            $this->notify->success('You have successfully bought ('.$this->skipAmount.') Skip for '.$this->skipPrice.' gold.');
         }
         else
         {

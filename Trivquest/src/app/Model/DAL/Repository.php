@@ -4,7 +4,6 @@ class Repository
 {
     protected $dbConnectionQuestion;
     protected $dbConnectionUser;
-    protected $dbTable;
     protected $dbUsername = 'root';
     protected $dbPassword = '';
     protected $dbConnstringUser = 'mysql:host=127.0.0.1;dbname=userdb';
@@ -22,7 +21,7 @@ class Repository
         return $this->dbConnectionUser;
     }
 
-    public function connectionQuestions()
+    public function connectionQuestion()
     {
         if ($this->dbConnectionQuestion == NULL)
         {

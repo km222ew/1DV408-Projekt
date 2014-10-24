@@ -14,17 +14,17 @@ class ProfileController
         $this->profileModel = new ProfileModel($notify);
     }
 
-    public function getUser($username)
+    private function getUser($username)
     {
         return $this->profileModel->getUserData($username);
     }
 
-    public function buyRemoveTwo($username)
+    private function buyRemoveTwo($username)
     {
         $this->profileModel->addRemoveTwo($username);
     }
 
-    public function buySkip($username)
+    private function buySkip($username)
     {
         $this->profileModel->addSkip($username);
     }

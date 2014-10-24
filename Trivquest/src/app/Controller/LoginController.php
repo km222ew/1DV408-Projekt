@@ -89,6 +89,10 @@ class LoginController {
             $this->view->deleteCookies();
             return false;
         }
+        else
+        {
+            return false;
+        }
     }
 
 	public function doLogin()

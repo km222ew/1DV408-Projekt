@@ -1,6 +1,6 @@
 <?php
 
-require_once("UserRepository.php");
+require_once("DAL/UserRepository.php");
 require_once("User.php");
 
 class RegisterModel

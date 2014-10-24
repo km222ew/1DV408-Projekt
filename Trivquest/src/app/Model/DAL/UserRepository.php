@@ -5,6 +5,9 @@ require_once("Repository.php");
 class UserRepository extends Repository
 {
     private $db;
+    private $dbTable;
+
+    //Db columns
     private static $username = "username";
     private static $password = "password";
     private static $token = "token";

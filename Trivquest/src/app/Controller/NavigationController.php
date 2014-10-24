@@ -7,6 +7,7 @@ require_once('src/app/Model/LoginModel.php');
 require_once('src/app/View/LoginView.php');
 require_once('src/app/View/LoginView.php');
 require_once('src/app/View/NavigationView.php');
+require_once("src/app/Model/DAL/QuestionRepository.php");
 
 
 class NavigationController
@@ -22,20 +23,26 @@ class NavigationController
 
         $controller = null;
 
+        $username = $loginModel->getUsername();
+
         try
         {
+            /*$q = new QuestionRepository();
+
+            $result = $q->getQuestions();
+
+            print_r($result);*/
+
             if($loginModel->IsLoggedIn($loginView->getUserAgent(), $loginView->getUserIp()) || $loginController->doCookieLogin())
             {
                 switch(NavigationView::getAction())
                 {
                     case NavigationView::$actionShowProfile:
                         $controller = new ProfileController($notify);
-                        return $controller->showProfile($loginModel->getUsername());
-                        break;
+                        return $controller->showProfile($username);
                     case NavigationView::$actionLogout:
                         $loginController->doLogout();
                         return $loginController->doLogin();
-                        break;
                     case NavigationView::$actionRegister:
                         if($loginModel->IsLoggedIn($loginView->getUserAgent(), $loginView->getUserIp()))
                         {
@@ -43,14 +50,17 @@ class NavigationController
                         }
                         return $loginController->doLogin();
                         break;
+                    case NavigationView::$actionNewRound:
+                        $controller = new GameController($notify);
+                        $controller->newGame();
+                        NavigationView::redirectPlay();
+                        break;
                     case NavigationView::$actionPlay:
-                        $controller = new GameController();
-                        return $controller->showGameField();
+                        $controller = new GameController($notify);
+                        return $controller->showGameField($username);
                     default:
                         $controller = new ProfileController($notify);
-                        return $controller->showProfile($loginModel->getUsername());
-                        break;
-
+                        return $controller->showProfile($username);
                 }
             }
             else
@@ -63,8 +73,5 @@ class NavigationController
             echo "something went wrong";
             die();
         }
-
-
-
     }
 }

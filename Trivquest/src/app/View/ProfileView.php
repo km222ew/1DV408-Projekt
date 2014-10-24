@@ -11,7 +11,8 @@ class ProfileView
 
     public function didBuyRemoveTwo()
     {
-        if (isset($_GET[$this->action]) && $_GET[$this->action] == 'buy=item=removetwo') {
+        if (isset($_GET[$this->action]) && $_GET[$this->action] == 'buy=item=removetwo')
+        {
             return true;
         }
         else
@@ -22,7 +23,8 @@ class ProfileView
 
     public function didBuySkip()
     {
-        if (isset($_GET[$this->action]) && $_GET[$this->action] == 'buy=item=skip') {
+        if (isset($_GET[$this->action]) && $_GET[$this->action] == 'buy=item=skip')
+        {
             return true;
         }
         else
@@ -89,7 +91,7 @@ class ProfileView
 
                         </p>
                         <div class='text-center marginb'>
-                            <a href='?action=".NavigationView::$actionPlay."' class='btn btn-lg btn-primary'>Start new round</a>
+                            <a href='?action=".NavigationView::$actionNewRound."' class='btn btn-lg btn-primary'>Start new round</a>
                         </div>
                     </div>
 				</div>

@@ -7,6 +7,7 @@ class NavigationView
     public static $actionShowProfile = "profile";
     public static $actionLogout = "logout";
     public static $actionRegister = "register";
+    public static $actionNewRound = "newgame";
     public static $actionPlay = "play";
     public static $actionSubmitAnswer = "answer";
 
@@ -19,4 +20,10 @@ class NavigationView
 
         return self::$actionShowProfile;
     }
+
+    public static function redirectPlay()
+    {
+        header('Location: ?'.NavigationView::$action.'=play');
+    }
+
 }

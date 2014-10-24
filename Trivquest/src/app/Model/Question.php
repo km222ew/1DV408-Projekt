@@ -3,18 +3,14 @@
 class Question
 {
     private $question;
-    private $wrongAnswer1;
-    private $wrongAnswer2;
-    private $wrongAnswer3;
-    private $correctAnswer;
+    private $answers;
+    private $isRemoveTwoUsed;
 
-    public function __construct($question, $wrongAnswer1, $wrongAnswer2, $wrongAnswer3, $correctAnswer)
+    public function __construct($question, $answers)
     {
         $this->question = $question;
-        $this->wrongAnswer1 = $wrongAnswer1;
-        $this->wrongAnswer2 = $wrongAnswer2;
-        $this->wrongAnswer3 = $wrongAnswer3;
-        $this->correctAnswer = $correctAnswer;
+        $this->answers = $answers;
+        $this->isRemoveTwoUsed = false;
     }
 
     public function getQuestion()
@@ -22,23 +18,18 @@ class Question
         return $this->question;
     }
 
-    public function getWrongAnswer1()
+    public function getAnswers()
     {
-        return $this->wrongAnswer1;
+        return $this->answers;
     }
 
-    public function getWrongAnswer2()
+    public function answerQuestion(Answer $answer)
     {
-        return $this->wrongAnswer2;
-    }
+        if($answer->getIsCorrect())
+        {
+            return true;
+        }
 
-    public function getWrongAnswer3()
-    {
-        return $this->wrongAnswer3;
-    }
-
-    public function getCorrectAnswer()
-    {
-        return $this->correctAnswer;
+        return false;
     }
 }
