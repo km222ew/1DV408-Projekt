@@ -20,7 +20,24 @@ class Question
 
     public function getAnswers()
     {
-        return $this->answers;
+        $stringAnswers = Array();
+
+        foreach($this->answers as $answer)
+        {
+            $stringAnswers[] = $answer->getAnswer();
+        }
+
+        return $stringAnswers;
+    }
+
+    public function getRemoveTwo()
+    {
+        return $this->isRemoveTwoUsed;
+    }
+
+    public function useRemoveTwo()
+    {
+        $this->isRemoveTwoUsed = true;
     }
 
     public function answerQuestion(Answer $answer)

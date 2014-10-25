@@ -19,11 +19,6 @@ class GameController
         return $this->gameModel->getUserData($username);
     }
 
-    private function getLives()
-    {
-
-    }
-
     public function newGame()
     {
         $this->gameModel->newGame();
@@ -31,8 +26,17 @@ class GameController
 
     public function showGameField($username)
     {
+        $trivia = $this->gameModel->getTrivia();
+
+        $currentQuestion = $trivia->getActiveQuestion();
+
+        $question = $currentQuestion->getQuestion();
+        $answers = $currentQuestion->getAnswers();
+
         $user = $this->getUser($username);
 
-        return $this->gameView->renderGameField($user->getRemoveTwo(), $user->getSkip());
+        return $this->gameView->renderGameField($user->getRemoveTwo(), $user->getSkip(), $currentQuestion->getQuestion(),
+                                                $currentQuestion->getAnswers(), $trivia->getCurrentQuestion(),
+                                                $trivia->getTotalQuestions(), $trivia->getLives());
     }
 }

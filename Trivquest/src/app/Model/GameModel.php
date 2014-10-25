@@ -6,6 +6,7 @@ require_once("DAL/QuestionRepository.php");
 require_once("Trivia.php");
 require_once("Question.php");
 require_once("Answer.php");
+require_once("GameSession.php");
 
 
 class GameModel
@@ -13,17 +14,18 @@ class GameModel
     private $notify;
     private $questionRep;
     private $userRep;
+    private $gameSession;
+
+    private $triviaSession;
 
     public function __construct(Notify $notify)
     {
         $this->notify = $notify;
         $this->questionRep = new QuestionRepository();
         $this->userRep = new UserRepository();
-    }
+        $this->gameSession = new GameSession();
 
-    public function getQuestions()
-    {
-        //TODO:Getquestions
+        $this->triviaSession = "trivia";
     }
 
     public function getUserData($username)
@@ -37,7 +39,22 @@ class GameModel
     {
         $trivia = $this->questionRep->getQuestions();
 
-        $this->saveTriviaToSession($trivia);
+        $this->gameSession->saveTriviaToSession($trivia);
+    }
+
+    public function updateTrivia(Trivia $trivia)
+    {
+        $this->gameSession->saveTriviaToSession($trivia);
+    }
+
+    public function getTrivia()
+    {
+        return $this->gameSession->loadTriviaFromSession();
+    }
+
+    public function getQuestion()
+    {
+
     }
 
     public function getLives()
@@ -73,15 +90,5 @@ class GameModel
     public function addLevel()
     {
         //TODO:Addlevel
-    }
-
-    private function saveTriviaToSession(Trivia $trivia)
-    {
-
-    }
-
-    private function loadTriviaFromSession()
-    {
-
     }
 }

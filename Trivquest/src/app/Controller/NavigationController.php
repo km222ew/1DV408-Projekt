@@ -25,8 +25,8 @@ class NavigationController
 
         $username = $loginModel->getUsername();
 
-        try
-        {
+        /*try
+        {*/
             /*$q = new QuestionRepository();
 
             $result = $q->getQuestions();
@@ -67,11 +67,11 @@ class NavigationController
             {
                 return $loginController->doLogin();
             }
-        }
+/*        }
         catch(Exception $e)
         {
             echo "something went wrong";
             die();
-        }
+        }*/
     }
 }

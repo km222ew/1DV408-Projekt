@@ -1,5 +1,9 @@
 <?php
 
+require_once("src/app/Model/Trivia.php");
+require_once("src/app/Model/Question.php");
+require_once("src/app/Model/Answer.php");
+
 class GameView
 {
     public function __construct()
@@ -7,7 +11,7 @@ class GameView
 
     }
 
-    public function renderGameField($removeTwo, $skip)
+    public function renderGameField($removeTwo, $skip, $question, $answers, $currentQuestion, $totalQuestions, $lives)
     {
         $body = "<div id='container'>
                     <div class='row'>
@@ -23,7 +27,7 @@ class GameView
                                         </div><!-- /.col-lg-6 -->
 
                                         <div class='col-lg-6 text-right'>
-                                            <h2><span class='label label-info'> x 5</span></h2>
+                                            <h2><span class='label label-info'> x $lives</span></h2>
                                         </div><!-- /.col-lg-6 -->
                                     </div>
 
@@ -54,10 +58,10 @@ class GameView
                         <div class='col-lg-9'>
                             <div class='panel panel-primary'>
                                 <div class='panel-heading'>
-                                    <h3 class='panel-title'>Question 1/10 </h3>
+                                    <h3 class='panel-title'>Question $currentQuestion/$totalQuestions </h3>
                                 </div>
                                 <div class='panel-body'>
-                                    <h2></h2>
+                                    <h2>$question</h2>
                                 </div>
                             </div>
 
@@ -68,7 +72,7 @@ class GameView
                                             <span class='input-group-addon'>
                                                 <input type='radio' name='answer'>
                                             </span>
-                                            <input type='text' class='form-control' disabled>
+                                            <input type='text' class='form-control' disabled value='$answers[0]'>
                                         </div><!-- /input-group -->
                                     </div><!-- /.col-lg-6 -->
 
@@ -77,7 +81,7 @@ class GameView
                                             <span class='input-group-addon'>
                                                 <input type='radio' name='answer'>
                                             </span>
-                                            <input type='text' class='form-control' disabled>
+                                            <input type='text' class='form-control' disabled value='$answers[1]'>
                                         </div><!-- /input-group -->
                                     </div><!-- /.col-lg-6 -->
                                 </div>
@@ -88,7 +92,7 @@ class GameView
                                             <span class='input-group-addon'>
                                                 <input type='radio' name='answer'>
                                             </span>
-                                            <input type='text' class='form-control' disabled>
+                                            <input type='text' class='form-control' disabled value='$answers[2]'>
                                         </div><!-- /input-group -->
                                     </div><!-- /.col-lg-6 -->
 
@@ -97,7 +101,7 @@ class GameView
                                             <span class='input-group-addon'>
                                                 <input type='radio' name='answer'>
                                             </span>
-                                            <input type='text' class='form-control' disabled value=''>
+                                            <input type='text' class='form-control' disabled value='$answers[3]'>
                                         </div><!-- /input-group -->
                                     </div><!-- /.col-lg-6 -->
                                 </div>
