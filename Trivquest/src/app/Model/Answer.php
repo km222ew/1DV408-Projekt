@@ -2,8 +2,11 @@
 
 class Answer
 {
+    //string
     private $answer;
+    //bool
     private $isCorrect;
+    //bool
     private $removed;
 
     public function __construct($answer, $isCorrect)
@@ -13,11 +16,13 @@ class Answer
         $this->removed = false;
     }
 
+    //If the answer should be disabled (50/50 was used, aka removetwo)
     public function getRemoved()
     {
         return $this->removed;
     }
 
+    //If the answer is the correct answer it will never be set to be disabled
     public function removeAnswer()
     {
         if($this->isCorrect)

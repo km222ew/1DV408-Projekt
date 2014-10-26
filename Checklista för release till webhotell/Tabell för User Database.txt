@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
+  `username` varchar(64) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  `token` varchar(256) NOT NULL DEFAULT '0' COMMENT 'cookie token',
+  `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'cookie expire time',
+  `gold` int(11) NOT NULL DEFAULT '0',
+  `skip` int(11) NOT NULL DEFAULT '1',
+  `removetwo` int(11) NOT NULL DEFAULT '3',
+  `exp` int(11) NOT NULL DEFAULT '0',
+  `level` int(11) NOT NULL DEFAULT '0',
+  `exptonextlevel` int(11) NOT NULL DEFAULT '1000',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;

@@ -8,10 +8,10 @@ class GameController
     private $gameView;
     private $gameModel;
 
-    public function __construct($notify)
+    public function __construct(Notify $notify, UserRepository $userRep)
     {
-        $this->gameView = new GameView();
-        $this->gameModel = new GameModel($notify);
+        $this->gameView = new GameView($notify);
+        $this->gameModel = new GameModel($notify, $userRep);
     }
 
     public function newGame()
@@ -80,6 +80,11 @@ class GameController
 
         if($this->gameView->didAnswer())
         {
+            if($this->gameView->getAnswer() == null)
+            {
+                NavigationView::redirectPlay();
+                return;
+            }
             $this->gameModel->answerActiveQuestion($this->gameView->getAnswer(), $username);
             NavigationView::redirectPlay();
         }

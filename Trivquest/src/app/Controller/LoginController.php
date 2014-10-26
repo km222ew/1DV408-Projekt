@@ -9,15 +9,17 @@ class LoginController {
     private $registerModel;
 	private $view;
     private $registerView;
-    private $notify;
 
-	public function __construct(LoginModel $loginModel, LoginView $loginView, Notify $notify)
+    private $index;
+
+	public function __construct(LoginModel $loginModel, LoginView $loginView, Notify $notify, UserRepository $userRep)
     {
 		$this->model = $loginModel;
-        $this->registerModel = new RegisterModel($notify);
+        $this->registerModel = new RegisterModel($notify, $userRep);
 		$this->view = $loginView;
         $this->registerView = new RegisterView();
-        $this->notify = $notify;
+
+        $this->index = 'index.php';
 	}
 
     //Create new cookies on login with cookies
@@ -101,7 +103,7 @@ class LoginController {
         if ($this->view->didLogin())
         {
             //Get rid of post request
-            $this->view->redirect("index.php");
+            $this->view->redirect($this->index);
 
             //Validate credentials (post)
             if ($this->validateLogin())
@@ -121,7 +123,7 @@ class LoginController {
             if($this->registerModel->validateRegister($username, $password, $repPassword))
             {
                 //Get rid of post request
-                $this->view->redirect("index.php");
+                $this->view->redirect($this->index);
 
                 return $this->view->login();
             }

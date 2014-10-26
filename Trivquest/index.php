@@ -19,4 +19,8 @@ $notifyView = new NotifyView($notify);
 
 $navigationController = new NavigationController();
 
-$response->HTMLPage($navigationController->doControl($notify), $notifyView);
+//Injecting a UserRepository
+//Have to do this because the webhost complained about too many connections used and I had limited time.
+$userRep = new UserRepository();
+
+$response->HTMLPage($navigationController->doControl($notify, $userRep), $notifyView);

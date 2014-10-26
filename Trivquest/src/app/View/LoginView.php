@@ -4,8 +4,7 @@ require_once('src/components/cookie/cookie.service.php');
 
 class LoginView {
 
-	private $model;
-	public $cookieService;
+	private $cookieService;
 
     //Strings
     private $username;
@@ -19,9 +18,8 @@ class LoginView {
     private $action;
     private $register;
 
-    public function __construct(LoginModel $model)
+    public function __construct()
     {
-        $this->model = $model;
         $this->cookieService = new CookieService;
 
         $this->username = 'username';
@@ -41,7 +39,7 @@ class LoginView {
     {
 		if (isset($_POST[$this->username]))
         {
-			//Save username in cookie to remember input
+			//Save username in cookie to remember input (not that great of a solution)
 			$this->cookieService->save($this->inputUsername, $_POST[$this->username], time()+3);
 			return trim($_POST[$this->username]);
 		}
@@ -123,7 +121,7 @@ class LoginView {
         }
     }
 
-	//Redirect, to get rid of post, changed to work with different pages
+	//Redirect, to get rid of post
 	public function redirect($pageId)
     {
         header("Location:$pageId");
@@ -132,7 +130,6 @@ class LoginView {
 	//Page: login, page for logging in
 	public function login()
     {
-
 		$printUsername = $this->cookieService->load($this->inputUsername);
 
 		$body = "
@@ -145,14 +142,12 @@ class LoginView {
                         </label>
                         <div class='row'>
                             <div class='col-lg-6'>
-                                <button type='submit' name=$this->login class='btn btn-primary btn-block'>Sign in</button>
-                            </div>
-                            <div class='col-lg-6'>
                                 <a href='?action=".NavigationView::$actionRegister."' class='btn btn-primary btn-block'>Register</a>
                             </div>
+                            <div class='col-lg-6'>
+                                <button type='submit' name=$this->login class='btn btn-primary btn-block'>Sign in</button>
+                            </div>
                         </div>
-
-
 				</form>";
 
 		return $body;

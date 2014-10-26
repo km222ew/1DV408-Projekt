@@ -1,5 +1,6 @@
 <?php
 
+//So many gets....
 class User
 {
     private $username;

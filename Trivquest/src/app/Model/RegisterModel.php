@@ -8,11 +8,11 @@ class RegisterModel
     private $notify;
     private $userRep;
 
-    public function __construct(Notify $notify)
+    public function __construct(Notify $notify, UserRepository $userRep)
     {
         //Notifications notify->success/error/info(message, optional header)
         $this->notify = $notify;
-        $this->userRep = new UserRepository();
+        $this->userRep = $userRep;
     }
 
     //Make sure provided credentials are valid for registration
@@ -24,33 +24,33 @@ class RegisterModel
         if($password != $repPassword)
         {
             $clearForRegistration = false;
-            $this->notify->error('Lösenorden matchar inte');
+            $this->notify->error('Passwords does not match');
         }
 
         if(strlen($username) < 3)
         {
             $clearForRegistration = false;
-            $this->notify->error('Användarnamnet har för få tecken. Minst 3 tecken');
+            $this->notify->error('Username needs at least 3 characters');
         }
 
         if(strlen($password) < 6)
         {
             $clearForRegistration = false;
-            $this->notify->error('Lösenorden har för få tecken. Minst 6 tecken');
+            $this->notify->error('Password needs at least 6 characters');
         }
 
         //Check if username contains invalid characters
         if(preg_match($validChars, $username))
         {
             $clearForRegistration = false;
-            $this->notify->error('Användarnamnet innehåller ogiltiga tecken');
+            $this->notify->error('Username contains illegal characters');
         }
 
         //Check if username exist in database
         if(strlen($username) > 0 && $this->userRep->getUserByName($username) != null)
         {
             $clearForRegistration = false;
-            $this->notify->error('Användarnamnet är redan upptaget');
+            $this->notify->error('Username is already taken');
         }
 
         //Input user into database if everything is ok
@@ -58,7 +58,7 @@ class RegisterModel
         {
             $this->registerUser(new User($username, $password, null, null, null, null, null, null, null, null));
 
-            $this->notify->success('Registrering av ny användare lyckades');
+            $this->notify->success('You have successfully been registered');
             return true;
         }
 

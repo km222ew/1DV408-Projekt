@@ -5,10 +5,8 @@ require_once("User.php");
 
 class LoginModel {
 
-	public $notifications;
-	public $tokenExpiration;
-
     private $notify;
+    private $userRep;
     private $token;
 
     //Strings
@@ -16,11 +14,10 @@ class LoginModel {
     private $userAgentStr;
     private $userIpStr;
 
-	public function __construct(Notify $notify)
+	public function __construct(Notify $notify, UserRepository $userRep)
     {
-		//Notifications notify->success/error/info(message, optional header)
 		$this->notify = $notify;
-        $this->userRep = new UserRepository();
+        $this->userRep = $userRep;
 
         //Strings
         $this->usernameStr = 'username';

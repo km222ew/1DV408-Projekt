@@ -8,7 +8,7 @@ require_once("Question.php");
 require_once("Answer.php");
 require_once("GameSession.php");
 
-
+//Rather large class. Game logic
 class GameModel
 {
     private $notify;
@@ -17,25 +17,27 @@ class GameModel
     private $gameSession;
 
     //Game values. Gold and exp reward per question answered correctly (even when using lifeline)
+    //Reward
     private $goldReward;
     private $expReward;
+    //Penalty
     private $goldPenalty;
     private $expPenalty;
     //How many lifelines removed per use (1)
     private $removeTwoAmount;
     private $skipAmount;
-    //Level and exptonextlevel increase
+    //By how much level and exptonextlevel increases when the client raises in level
     private $level;
     private $expToNextLevel;
 
-    //Used for calculating bonus reward if trivia is completed
+    //Used for calculating bonus reward if trivia is completed (bonusmultiplier)
     private $correctAnswers;
 
-    public function __construct(Notify $notify)
+    public function __construct(Notify $notify, UserRepository $userRep)
     {
         $this->notify = $notify;
         $this->questionRep = new QuestionRepository();
-        $this->userRep = new UserRepository();
+        $this->userRep = $userRep;
         $this->gameSession = new GameSession();
 
         $this->goldReward = 50;
@@ -50,7 +52,7 @@ class GameModel
         $this->correctAnswers = "correctanswers";
     }
 
-    //Same as in ProfileModel. Maybe should store in session?
+    //Same as in ProfileModel. Maybe should for storing in session if time.
     public function getUserData($username)
     {
         $user = $this->userRep->getUserByName($username);
@@ -64,6 +66,7 @@ class GameModel
 
         $this->saveTrivia($trivia);
 
+        //Start the bonus multiplier
         $_SESSION[$this->correctAnswers] = 0;
     }
 
@@ -86,13 +89,14 @@ class GameModel
     {
         $trivia = $this->loadTrivia();
 
+        //if you completed the trivia with lives left
         if($trivia->isTriviaOver() && $trivia->getLives() > 0)
         {
             $this->removeCurrentTrivia();
             $this->notify->success('Congratulations, you completed a trivia! How about another round?');
             $this->giveTriviaReward($username);
             return true;
-        }
+        }//if you have no lives left and the trivia is not finished
         else if($trivia->getLives() <= 0)
         {
             $this->gameSession->unsetTrivia();
@@ -109,28 +113,32 @@ class GameModel
         $answers = $trivia->getActiveQuestion()->getAnswers();
         $answer = $answers[$answerPos];
 
+        //Correct? Increase multiplier and give reward for correct answer.
         if($answer->getIsCorrect())
         {
             $this->notify->success('Good job. '.$answer->getAnswer().' was the correct answer.');
             $_SESSION[$this->correctAnswers] += 1;
             $this->giveQuestionReward($username);
         }
-        else
+        else //Incorrect? Take a life and give a small penalty
         {
             $trivia->removeLife();
             $this->notify->error(''.$answer->getAnswer().' is incorrect. You lost one life.');
             $this->giveQuestionPenalty($username);
         }
 
+        //Prepares the trivia to provide the next question
         $trivia->nextQuestion();
 
         $this->saveTrivia($trivia);
     }
 
+    //Using lifeline called 50/50 when playing
     public function useRemoveTwo($username)
     {
         $user = $this->getUserData($username);
 
+        //Only use if the player has one
         if($user->getRemoveTwo() >= 1)
         {
             $trivia = $this->loadTrivia();
@@ -146,7 +154,8 @@ class GameModel
 
             $totalRemoved = 2;
 
-            //Highly ineffective. Could prob do better with more time.
+            //Highly ineffective. Could prob do a better solution with more time.
+            //Loops until 2 wrong answers have been set to be disabled.
             for($i = 0; $i < $totalRemoved; ++$i)
             {
                 $randomAnswer = rand(0, 3);
@@ -176,6 +185,7 @@ class GameModel
     {
         $user = $this->getUserData($username);
 
+        //Only use if the player has one
         if($user->getSkip() >= 1)
         {
             $trivia = $this->loadTrivia();
@@ -194,6 +204,7 @@ class GameModel
         }
     }
 
+    //Reward at the end of a completed trivia, based on the bonus multiplier
     private function giveTriviaReward($username)
     {
         $multiplier = $_SESSION[$this->correctAnswers];
@@ -230,6 +241,7 @@ class GameModel
         $this->userDataCalc($username);
     }
 
+    //Calculate exp and gold
     private function userDataCalc($username)
     {
         $user = $this->getUserData($username);
@@ -237,18 +249,21 @@ class GameModel
         $exp = $user->getExp();
         $expToNextLevel = $user->getExpToNextLevel();
 
+        //Can't have less than 0 gold
         if($gold < 0)
         {
             $gold = abs($gold);
             $this->userRep->updateUserGold($username, $gold);
         }
 
+        //Same with exp
         if($exp < 0)
         {
             $exp = abs($exp);
             $this->userRep->updateUserExp($username, $exp);
         }
 
+        //Makes sure to increase the level and the required exp to next level based on current exp
         if($exp >= $expToNextLevel)
         {
             $this->userRep->updateUserExpToNextLevel($username, $this->expToNextLevel);

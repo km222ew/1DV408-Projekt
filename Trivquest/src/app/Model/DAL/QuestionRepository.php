@@ -60,6 +60,7 @@ class QuestionRepository extends Repository
 
             $answers = array($wA1, $wA2, $wA3, $cA);
 
+            //mixes the answers so they aren't at the same spot all the time when presented
             shuffle($answers);
 
             $questions[] = new Question($question[self::$question], $answers);

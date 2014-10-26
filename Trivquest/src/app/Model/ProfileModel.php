@@ -7,15 +7,17 @@ class ProfileModel
 {
     private $notify;
     private $userRep;
+    //Prices for lifelines
     private $removeTwoPrice;
     private $skipPrice;
+    //Number of lifelines per purchase
     private $removeTwoAmount;
     private $skipAmount;
 
-    public function __construct(Notify $notify)
+    public function __construct(Notify $notify, UserRepository $userRep)
     {
         $this->notify = $notify;
-        $this->userRep = new UserRepository();
+        $this->userRep = $userRep;
         $this->removeTwoPrice = 250;
         $this->skipPrice = 500;
         $this->removeTwoAmount = 1;

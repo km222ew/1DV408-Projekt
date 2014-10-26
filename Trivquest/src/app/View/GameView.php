@@ -6,6 +6,7 @@ require_once("src/app/Model/Answer.php");
 
 class GameView
 {
+    private $notify;
     //Strings
     private $answerChoice;
     private $answer1;
@@ -13,8 +14,10 @@ class GameView
     private $answer3;
     private $answer4;
 
-    public function __construct()
+    public function __construct(Notify $notify)
     {
+        $this->notify = $notify;
+
         $this->answerChoice = 'answer';
         $this->answer1 = 0;
         $this->answer2 = 1;
@@ -27,8 +30,12 @@ class GameView
         {
             return $_POST[$this->answerChoice];
         }
+        else
+        {
+            $this->notify->error("You need to provide an answer");
+        }
 
-        return 0;
+        return null;
     }
 
     public function didProfile()

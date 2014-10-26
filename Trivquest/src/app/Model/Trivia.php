@@ -2,8 +2,11 @@
 
 class Trivia
 {
+    //array (question objects)
     private $questions;
+    //number
     private $lives;
+    //Index for the list (numbers)
     private $currentQuestion;
     private $totalQuestions;
 
@@ -17,6 +20,11 @@ class Trivia
 
     public function removeLife()
     {
+        if($this->lives <= 0)
+        {
+            return;
+        }
+
         $this->lives -= 1;
     }
 
@@ -30,6 +38,7 @@ class Trivia
         return $this->totalQuestions;
     }
 
+    //Gets current question for display hence the +1 (maybe should not be made in the class)
     public function getCurrentQuestion()
     {
         return $this->currentQuestion + 1;

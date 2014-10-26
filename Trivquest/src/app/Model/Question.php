@@ -2,8 +2,11 @@
 
 class Question
 {
+    //string
     private $question;
+    //array (answer objects)
     private $answers;
+    //bool
     private $isRemoveTwoUsed;
 
     public function __construct($question, $answers)
@@ -28,6 +31,7 @@ class Question
         return $this->isRemoveTwoUsed;
     }
 
+    //If a 50/50(aka removetwo) is used it flags this question so that it can't be used again
     public function useRemoveTwo()
     {
         $this->isRemoveTwoUsed = true;

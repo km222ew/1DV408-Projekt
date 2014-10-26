@@ -8,10 +8,10 @@ class ProfileController
     private $profileView;
     private $profileModel;
 
-    public function __construct(Notify $notify)
+    public function __construct(Notify $notify, UserRepository $userRep)
     {
         $this->profileView = new ProfileView();
-        $this->profileModel = new ProfileModel($notify);
+        $this->profileModel = new ProfileModel($notify, $userRep);
     }
 
     private function getUser($username)

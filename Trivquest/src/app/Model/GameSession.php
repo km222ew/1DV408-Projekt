@@ -8,13 +8,27 @@ class GameSession
     private $triviaSession;
 
     //property names
+    private $questions;
+    private $answers;
+    private $currentQuestion;
+    private $totalQuestions;
+    private $removed;
+    private $isRemoveTwoUsed;
 
 
     public function __construct()
     {
         $this->triviaSession = "trivia";
+
+        $this->questions = 'questions';
+        $this->answers = 'answers';
+        $this->currentQuestion = 'currentQuestion';
+        $this->totalQuestions = 'totalQuestions';
+        $this->removed = 'removed';
+        $this->isRemoveTwoUsed = 'isRemoveTwoUsed';
     }
 
+    //Remove the trivia from the session
     public function unsetTrivia()
     {
         unset($_SESSION[$this->triviaSession]);
@@ -28,13 +42,16 @@ class GameSession
 
         $triviaReflection = new ReflectionClass($trivia);
 
+        //Get all properties in the trivia object (class)
         foreach ($triviaReflection->getProperties() as $triviaProperty)
         {
+            //Set them to public basically (temporary)
             $triviaProperty->setAccessible(true);
 
-            if($triviaProperty->getName() == 'questions')
+            //If the property is the list of questions, repeat same steps as the trivia
+            if($triviaProperty->getName() == $this->questions)
             {
-                $questions = $triviaReflection->getProperty('questions');
+                $questions = $triviaReflection->getProperty($this->questions);
 
                 $questions->setAccessible(true);
                 $questionsValue = $questions->getValue($trivia);
@@ -43,16 +60,19 @@ class GameSession
                 $questionsArray = array();
                 $questionArray = array();
 
+                //Loop all the question objects
                 foreach($questionsValue as $question)
                 {
                     $questionReflection = new ReflectionClass($question);
 
+                    //Every property in the question object(class)
                     foreach ($questionReflection->getProperties() as $questionProperty)
                     {
                         $questionProperty->setAccessible(true);
-                        if($questionProperty->getName() == 'answers')
+                        //If it is the list of answers, repeat the same steps as before
+                        if($questionProperty->getName() == $this->answers)
                         {
-                            $answers = $questionReflection->getProperty('answers');
+                            $answers = $questionReflection->getProperty($this->answers);
 
                             $answers->setAccessible(true);
                             $answersValue = $answers->getValue($question);
@@ -61,6 +81,7 @@ class GameSession
                             $answersArray = array();
                             $answerArray = array();
 
+                            //Loop the answer objects
                             foreach($answersValue as $answer)
                             {
                                 $answerReflection = new ReflectionClass($answer);
@@ -93,6 +114,7 @@ class GameSession
             $triviaProperty->setAccessible(false);
         }
 
+        //Save the "serialized" trivia to session without problem
         $_SESSION[$this->triviaSession] = $triviaArray;
     }
 
@@ -105,24 +127,27 @@ class GameSession
             return null;
         }
 
+        //get the trivia from session
         $triviaArray = $_SESSION[$this->triviaSession];
 
-        $trivia = new Trivia($this->recreateQuestions($triviaArray['questions']), $triviaArray['lives']);
+        //Create new trivia object with the saved questions->answers and lives as argument
+        $trivia = new Trivia($this->recreateQuestions($triviaArray[$this->questions]), $triviaArray['lives']);
 
         $triviaReflection = new ReflectionClass($trivia);
 
+        //Set the other saved property values with reflection
         foreach($triviaReflection->getProperties() as $prop)
         {
             $prop->setAccessible(true);
 
-            if($prop->getName() == 'currentQuestion')
+            if($prop->getName() == $this->currentQuestion)
             {
-                $prop->setValue($trivia,$triviaArray['currentQuestion']);
+                $prop->setValue($trivia,$triviaArray[$this->currentQuestion]);
             }
 
-            if($prop->getName() == 'totalQuestions')
+            if($prop->getName() == $this->totalQuestions)
             {
-                $prop->setValue($trivia,$triviaArray['totalQuestions']);
+                $prop->setValue($trivia,$triviaArray[$this->totalQuestions]);
             }
 
             $prop->setAccessible(false);
@@ -137,12 +162,12 @@ class GameSession
 
         for($i = 0; $i < count($questionsArray); ++$i)
         {
-            $question = new Question($questionsArray[$i]['question'], $this->recreateAnswers($questionsArray[$i]['answers']));
+            $question = new Question($questionsArray[$i]['question'], $this->recreateAnswers($questionsArray[$i][$this->answers]));
 
-            $prop = new ReflectionProperty($question, 'isRemoveTwoUsed');
+            $prop = new ReflectionProperty($question, $this->isRemoveTwoUsed);
 
             $prop->setAccessible(true);
-            $prop->setValue($question, $questionsArray[$i]['isRemoveTwoUsed']);
+            $prop->setValue($question, $questionsArray[$i][$this->isRemoveTwoUsed]);
             $prop->setAccessible(false);
 
             $questions[] = $question;
@@ -159,10 +184,10 @@ class GameSession
         {
             $answer = new Answer($answersArray[$i]['answer'], $answersArray[$i]['isCorrect']);
 
-            $prop = new ReflectionProperty($answer, 'removed');
+            $prop = new ReflectionProperty($answer, $this->removed);
 
             $prop->setAccessible(true);
-            $prop->setValue($answer, $answersArray[$i]['removed']);
+            $prop->setValue($answer, $answersArray[$i][$this->removed]);
             $prop->setAccessible(false);
 
             $answers[] = $answer;
