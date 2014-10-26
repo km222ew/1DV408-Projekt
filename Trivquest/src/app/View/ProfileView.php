@@ -3,15 +3,19 @@
 class ProfileView
 {
     private $action;
+    private $buyRemoveTwo;
+    private $buySkip;
 
     public function __construct()
     {
         $this->action = 'action';
+        $this->buyRemoveTwo = 'buy=item=removetwo';
+        $this->buySkip = 'buy=item=skip';
     }
 
     public function didBuyRemoveTwo()
     {
-        if (isset($_GET[$this->action]) && $_GET[$this->action] == 'buy=item=removetwo')
+        if (isset($_GET[$this->action]) && $_GET[$this->action] == $this->buyRemoveTwo)
         {
             return true;
         }
@@ -23,7 +27,7 @@ class ProfileView
 
     public function didBuySkip()
     {
-        if (isset($_GET[$this->action]) && $_GET[$this->action] == 'buy=item=skip')
+        if (isset($_GET[$this->action]) && $_GET[$this->action] == $this->buySkip)
         {
             return true;
         }
@@ -55,7 +59,7 @@ class ProfileView
                             <div class='col-lg-6'>
                                 <div class='text-center'>
                                     <div class='text-right'>
-                                    <h2><a href='?action=buy=item=removetwo' class='btn btn-lg btn-success'>Buy 1 for 250 Gold</a></h2>
+                                    <h2><a href='?action=$this->buyRemoveTwo' class='btn btn-lg btn-success'>Buy 1 for 250 Gold</a></h2>
                                 </div>
                                 </div>
                             </div>
@@ -70,7 +74,7 @@ class ProfileView
                             <div class='col-lg-6'>
                                 <div class='text-center'>
                                     <div class='text-right'>
-                                    <h1><a href='?action=buy=item=skip' class='btn btn-lg btn-success'>Buy 1 for 500 Gold</a></h1>
+                                    <h1><a href='?action=$this->buySkip' class='btn btn-lg btn-success'>Buy 1 for 500 Gold</a></h1>
                                 </div>
                                 </div>
                             </div>
@@ -84,14 +88,22 @@ class ProfileView
                         </div>
 				    </div>
 
-
                     <div class='col-lg-7 bc'>
                     <h1 class='text-center'>Instructions</h1>
-                        <p>
-
-                        </p>
-                        <div class='text-center marginb'>
-                            <a href='?action=".NavigationView::$actionNewRound."' class='btn btn-lg btn-primary'>Start new round</a>
+                    <h4>
+                        <ul>
+                            <li class='marginb'>View your current statistics here in the profile</li>
+                            <li class='marginb'>Start a new trivia by clicking the button down below</li>
+                            <li class='marginb'>You can buy more lifelines to the right. Simply click the buy button for the corresponding lifeline. Just make sure you have enough gold</li>
+                            <li class='marginb'>If you encounter a tough question, make use of a lifeline if you have one. 50/50 removes 2 wrong answers from play and gives you a 50/50 chance of answering correct.
+                            The Skip lifeline skips a question and treats it as if you answered it correctly, neat huh?</li>
+                            <li class='marginb'>If you answer a question wrong there will be a penalty! Don't worry though, answering a question correctly nets you double what you lost!</li>
+                            <li class='marginb'>However if you make it through a trivia you can expect a bonus in the end, based on your performance of course.</li>
+                            <li class='marginb'>Each time you answer a question wrong you lose a life. You have 5 lives each trivia, make them count!</li>
+                        </ul>
+                    </h4>
+                        <div class='text-center paddingt marginb'>
+                            <a href='?action=".NavigationView::$actionNewRound."' class='btn btn-lg btn-primary'>Start new trivia</a>
                         </div>
                     </div>
 				</div>

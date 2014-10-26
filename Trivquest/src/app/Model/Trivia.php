@@ -35,16 +35,19 @@ class Trivia
         return $this->currentQuestion + 1;
     }
 
-    public function getNextQuestion()
+    public function isTriviaOver()
     {
-        $this->currentQuestion += 1;
-
         if($this->currentQuestion == $this->totalQuestions)
         {
-            return null;
+            return true;
         }
 
-        return $this->questions[$this->currentQuestion];
+        return false;
+    }
+
+    public function nextQuestion()
+    {
+        $this->currentQuestion += 1;
     }
 
     public function getActiveQuestion()

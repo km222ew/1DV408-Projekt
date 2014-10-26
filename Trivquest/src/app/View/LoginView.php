@@ -136,19 +136,23 @@ class LoginView {
 		$printUsername = $this->cookieService->load($this->inputUsername);
 
 		$body = "
-				<a href='?action=".NavigationView::$actionRegister."' class='btn btn-lg btn-primary'>Registrera en ny användare</a>
-				<h2>Logga in</h2>
-				<form action='?action=".NavigationView::$actionShowProfile."' method='post'>
-					<fieldset>
-						<legend>Skriv in användarnamn och lösenord</legend>
-						<label for=$this->username>Username</label>
-						<input type='text' id=$this->username name=$this->username value='$printUsername'>
-						<label for=$this->password>Password</label>
-						<input type='password' id=$this->password name=$this->password>
-						<label for=$this->remember>Håll mig inloggad</label>
-						<input type='checkbox' id=$this->remember name=$this->remember>
-						<button type='submit' name=$this->login class='btn btn-primary'>Sign in</button>
-					</fieldset>
+				<form action='?action=".NavigationView::$actionShowProfile."' class='form-signin' method='post'>
+					    <h2 class='form-signin-heading'>Please sign in</h2>
+						<input type='text' class='form-control input-lg marginb' placeholder='Username' id=$this->username name=$this->username value='$printUsername' required autofocus>
+						<input type='password' class='form-control input-lg marginb' placeholder='Password' id=$this->password name=$this->password required>
+						<label class='checkbox'>
+                          <input type='checkbox' id=$this->remember name=$this->remember> Remember me
+                        </label>
+                        <div class='row'>
+                            <div class='col-lg-6'>
+                                <button type='submit' name=$this->login class='btn btn-primary btn-block'>Sign in</button>
+                            </div>
+                            <div class='col-lg-6'>
+                                <a href='?action=".NavigationView::$actionRegister."' class='btn btn-primary btn-block'>Register</a>
+                            </div>
+                        </div>
+
+
 				</form>";
 
 		return $body;
@@ -170,7 +174,7 @@ class LoginView {
         setcookie($this->tokenPass,"", time()-1);
     }
 
-    public function tokenPasscookiesExist()
+    public function tokenPassCookieExist()
     {
         if(isset($_COOKIE[$this->tokenPass]) === true)
         {

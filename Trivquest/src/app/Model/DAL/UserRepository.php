@@ -79,6 +79,8 @@ class UserRepository extends Repository
         }
     }
 
+    //Duplicated code for updating user data. Perhaps refactor to a common function?
+    //Easier to read if each has it's own funtion. Refactor if there is time.
     public function updateUserRemoveTwo($username, $value)
     {
         try
@@ -129,17 +131,50 @@ class UserRepository extends Repository
 
     public function updateUserExp($username, $value)
     {
+        try
+        {
+            $sql = "UPDATE $this->dbTable SET ". self::$exp . "=". self::$exp . "+? WHERE " . self::$username . "= ?";
+            $params = array($value, $username);
 
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 4");
+        }
     }
 
     public function updateUserLevel($username, $value)
     {
+        try
+        {
+            $sql = "UPDATE $this->dbTable SET ". self::$level . "=". self::$level . "+? WHERE " . self::$username . "= ?";
+            $params = array($value, $username);
 
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 5");
+        }
     }
 
     public function updateUserExpToNextLevel($username, $value)
     {
+        try
+        {
+            $sql = "UPDATE $this->dbTable SET ". self::$expToNextLevel . "=". self::$expToNextLevel . "+? WHERE " . self::$username . "= ?";
+            $params = array($value, $username);
 
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 6");
+        }
     }
 
     //Updates the stored token and cookie expire time in database

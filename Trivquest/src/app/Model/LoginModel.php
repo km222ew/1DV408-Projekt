@@ -11,18 +11,28 @@ class LoginModel {
     private $notify;
     private $token;
 
+    //Strings
+    private $usernameStr;
+    private $userAgentStr;
+    private $userIpStr;
+
 	public function __construct(Notify $notify)
     {
 		//Notifications notify->success/error/info(message, optional header)
 		$this->notify = $notify;
         $this->userRep = new UserRepository();
+
+        //Strings
+        $this->usernameStr = 'username';
+        $this->userAgentStr = 'userAgent';
+        $this->userIpStr = 'userIp';
 	}
 
 	public function getUsername()
     {
-		if (isset($_SESSION['username']))
+		if (isset($_SESSION[$this->usernameStr]))
         {
-			return $_SESSION['username'];
+			return $_SESSION[$this->usernameStr];
 		}
         else
         {
@@ -42,22 +52,22 @@ class LoginModel {
     {
 		session_destroy();
 		session_start();
-		$this->notify->info('Du är nu utloggad.');
+		$this->notify->info('You have signed out');
 	}
 
 	//Is user already logged in?
 	public function IsLoggedIn($userAgent, $userIp)
     {
-		if (!isset($_SESSION['username']))
+		if (!isset($_SESSION[$this->usernameStr]))
         {
 			return false;
 		}
 
-		$username = $_SESSION['username'];
+		$username = $_SESSION[$this->usernameStr];
 
         $user = $this->getUserFromDb($username);
 
-        if($user != null && $_SESSION['userAgent'] == $userAgent && $_SESSION['userIp'] == $userIp)
+        if($user != null && $_SESSION[$this->userAgentStr] == $userAgent && $_SESSION[$this->userIpStr] == $userIp)
         {
             return true;
         }
@@ -69,22 +79,22 @@ class LoginModel {
 
     private function setSession($username, $userIp, $userAgent)
     {
-        $_SESSION['username'] = $username;
-        $_SESSION['userIp'] = $userIp;
-        $_SESSION['userAgent'] = $userAgent;
+        $_SESSION[$this->usernameStr] = $username;
+        $_SESSION[$this->userIpStr] = $userIp;
+        $_SESSION[$this->userAgentStr] = $userAgent;
     }
 
 	//Validate credentials, used on login by post
 	public function validateCredentials($username, $password, $userAgent, $userIp, $remember) {
 		if ($username == '')
         {
-			$this->notify->error('Användarnamn saknas.');
+			$this->notify->error('Username is missing');
 			return false;
 		}
 
 		if ($password == '')
         {
-			$this->notify->error('Lösenord saknas.');
+			$this->notify->error('Password is missing');
 			return false;
 		}
 
@@ -92,17 +102,17 @@ class LoginModel {
 
         if($user == null || $password != $user->getPassword())
         {
-            $this->notify->error('Felaktigt användarnamn och/eller lösenord');
+            $this->notify->error('Wrong username and/or password');
             return false;
         }
 
         if($remember)
         {
-            $this->notify->success('Inloggning lyckades och vi kommer ihåg dig nästa gång.');
+            $this->notify->success('You successfully signed in and will be remembered next time');
         }
         else
         {
-            $this->notify->success('Inloggning lyckades.');
+            $this->notify->success('You have successfully signed in');
         }
 
         $this->setSession($username, $userIp, $userAgent);
@@ -118,13 +128,13 @@ class LoginModel {
         {
             $this->setSession($usernameCookie, $userIP, $userAgent);
 
-            $this->notify->success('Inloggning lyckades via cookies');
+            $this->notify->success('You have successfully been signed in with cookies');
 
             return true;
         }
         else
         {
-            $this->notify->error('Felaktig information i cookie');
+            $this->notify->error('Wrong information in cookies');
             return false;
         }
     }

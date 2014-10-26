@@ -1,28 +1,34 @@
 <?php
 
 //Should probably be NotifyModel
-class Notify {
+class Notify
+{
 
 	//Constructor, make sure session variable is an array
-	public function __construct() {
+	public function __construct()
+    {
 		$this->prepareArray();
 	}
 
 	//Clears array
-	private function clearArray() {
+	private function clearArray()
+    {
 		unset($_SESSION['notifications']);
 		$this->prepareArray();
 	}
 
 	//Make sure its an array
-	private function prepareArray() {
-		if (!isset($_SESSION['notifications']) || !is_array($_SESSION['notifications'])) {
+	private function prepareArray()
+    {
+		if (!isset($_SESSION['notifications']) || !is_array($_SESSION['notifications']))
+        {
 			$_SESSION['notifications'] = array();
 		}
 	}
 
 	//Creates notification objects and adds to array
-	private function create($type, $header, $message) {
+	private function create($type, $header, $message)
+    {
 		//Create notification
 		$notification = new Notification($type, $header, $message);
 
@@ -34,17 +40,20 @@ class Notify {
 	}
 
 	//Creates error messages
-	public function error($message, $header = 'Misslyckades!') {
+	public function error($message, $header = 'Mistake')
+    {
 		$this->create('danger', $header, $message);
 	}
 
 	//Creates information messages
-	public function info($message, $header = 'Info:') {
+	public function info($message, $header = 'Info')
+    {
 		$this->create('info', $header, $message);
 	}
 
 	//Creates success messages
-	public function success($message, $header = 'Lyckades!') {
+	public function success($message, $header = 'Success')
+    {
 		$this->create('success', $header, $message);
 	}
 

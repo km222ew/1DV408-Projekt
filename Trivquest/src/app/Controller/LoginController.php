@@ -60,7 +60,7 @@ class LoginController {
         $this->model->logOut();
 
         //If there are cookies present, delete them
-        if($this->view->usernameCookieExist() || $this->view->tokenPasscookiesExist())
+        if($this->view->usernameCookieExist() || $this->view->tokenPassCookieExist())
         {
             $this->view->deleteCookies();
         }
@@ -68,7 +68,7 @@ class LoginController {
 
     public function doCookieLogin()
     {
-        if($this->view->usernameCookieExist() && $this->view->tokenPasscookiesExist())
+        if($this->view->usernameCookieExist() && $this->view->tokenPassCookieExist())
         {
             if($this->model->loginWithCookies($this->view->getUsernameCookie(), $this->view->getTokenPassCookie(),
                 $this->view->getUserIP(), $this->view->getUserAgent()))
@@ -84,7 +84,7 @@ class LoginController {
                 return false;
             }
         }
-        else if($this->view->usernameCookieExist() || $this->view->tokenPasscookiesExist())
+        else if($this->view->usernameCookieExist() || $this->view->tokenPassCookieExist())
         {
             $this->view->deleteCookies();
             return false;
@@ -106,10 +106,7 @@ class LoginController {
             //Validate credentials (post)
             if ($this->validateLogin())
             {
-
                 $this->view->redirect("?action=".NavigationView::$actionShowProfile);
-                //Show logged in page
-                //return $this->view->loggedIn();
             }
         }
 

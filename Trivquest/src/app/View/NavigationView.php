@@ -23,7 +23,11 @@ class NavigationView
 
     public static function redirectPlay()
     {
-        header('Location: ?'.NavigationView::$action.'=play');
+        header('Location: ?'.NavigationView::$action.'='.NavigationView::$actionPlay.'');
     }
 
+    public static function redirectProfile()
+    {
+        header('Location: ?'.NavigationView::$action.'='.NavigationView::$actionShowProfile.'');
+    }
 }

@@ -15,15 +15,21 @@ class GameSession
         $this->triviaSession = "trivia";
     }
 
+    public function unsetTrivia()
+    {
+        unset($_SESSION[$this->triviaSession]);
+    }
+
     //Basically turns a Trivia object into a "storage-friendly" array to store in the session
     //My first attempt at using reflection so this is most likely not the most optimized way of solving this problem.
     public function saveTriviaToSession(Trivia $trivia)
     {
         $triviaArray = array();
 
-        $triviaReflection = new ReflectionClass(get_class($trivia));
+        $triviaReflection = new ReflectionClass($trivia);
 
-        foreach ($triviaReflection->getProperties() as $triviaProperty) {
+        foreach ($triviaReflection->getProperties() as $triviaProperty)
+        {
             $triviaProperty->setAccessible(true);
 
             if($triviaProperty->getName() == 'questions')
@@ -39,7 +45,7 @@ class GameSession
 
                 foreach($questionsValue as $question)
                 {
-                    $questionReflection = new ReflectionClass(get_class($question));
+                    $questionReflection = new ReflectionClass($question);
 
                     foreach ($questionReflection->getProperties() as $questionProperty)
                     {
@@ -57,7 +63,7 @@ class GameSession
 
                             foreach($answersValue as $answer)
                             {
-                                $answerReflection = new ReflectionClass(get_class($answer));
+                                $answerReflection = new ReflectionClass($answer);
 
                                 foreach($answerReflection->getProperties() as $answerProperty)
                                 {
@@ -94,6 +100,11 @@ class GameSession
     //Again, probably not the most optimized
     public function loadTriviaFromSession()
     {
+        if(!isset($_SESSION[$this->triviaSession]))
+        {
+            return null;
+        }
+
         $triviaArray = $_SESSION[$this->triviaSession];
 
         $trivia = new Trivia($this->recreateQuestions($triviaArray['questions']), $triviaArray['lives']);
@@ -104,14 +115,14 @@ class GameSession
         {
             $prop->setAccessible(true);
 
-            if($prop == 'currentQuestion')
+            if($prop->getName() == 'currentQuestion')
             {
                 $prop->setValue($trivia,$triviaArray['currentQuestion']);
             }
 
-            if($prop == 'totalQuestions')
+            if($prop->getName() == 'totalQuestions')
             {
-                $prop->setValue($trivia,$triviaArray['totalQuestion']);
+                $prop->setValue($trivia,$triviaArray['totalQuestions']);
             }
 
             $prop->setAccessible(false);
@@ -128,7 +139,7 @@ class GameSession
         {
             $question = new Question($questionsArray[$i]['question'], $this->recreateAnswers($questionsArray[$i]['answers']));
 
-            $prop = new ReflectionProperty(get_class($question), 'isRemoveTwoUsed');
+            $prop = new ReflectionProperty($question, 'isRemoveTwoUsed');
 
             $prop->setAccessible(true);
             $prop->setValue($question, $questionsArray[$i]['isRemoveTwoUsed']);
@@ -146,7 +157,15 @@ class GameSession
 
         for($i = 0; $i < count($answersArray); ++$i)
         {
-            $answers[] = new Answer($answersArray[$i]['answer'], $answersArray[$i]['isCorrect']);
+            $answer = new Answer($answersArray[$i]['answer'], $answersArray[$i]['isCorrect']);
+
+            $prop = new ReflectionProperty($answer, 'removed');
+
+            $prop->setAccessible(true);
+            $prop->setValue($answer, $answersArray[$i]['removed']);
+            $prop->setAccessible(false);
+
+            $answers[] = $answer;
         }
 
         return $answers;

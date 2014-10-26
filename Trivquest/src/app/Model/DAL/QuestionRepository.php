@@ -58,13 +58,11 @@ class QuestionRepository extends Repository
             $wA3 = new Answer($question[self::$wrongAnswer3], false);
             $cA = new Answer($question[self::$correctAnswer], true);
 
-            $answers = [$wA1, $wA2, $wA3, $cA];
+            $answers = array($wA1, $wA2, $wA3, $cA);
 
             shuffle($answers);
 
-            $q = new Question($question[self::$question], $answers);
-
-            $questions[] = $q;
+            $questions[] = new Question($question[self::$question], $answers);
         }
 
         return $questions;

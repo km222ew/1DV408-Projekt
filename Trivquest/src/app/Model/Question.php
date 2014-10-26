@@ -20,14 +20,7 @@ class Question
 
     public function getAnswers()
     {
-        $stringAnswers = Array();
-
-        foreach($this->answers as $answer)
-        {
-            $stringAnswers[] = $answer->getAnswer();
-        }
-
-        return $stringAnswers;
+        return $this->answers;
     }
 
     public function getRemoveTwo()
@@ -38,15 +31,5 @@ class Question
     public function useRemoveTwo()
     {
         $this->isRemoveTwoUsed = true;
-    }
-
-    public function answerQuestion(Answer $answer)
-    {
-        if($answer->getIsCorrect())
-        {
-            return true;
-        }
-
-        return false;
     }
 }

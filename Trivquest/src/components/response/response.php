@@ -1,32 +1,23 @@
 <?php
-
-//Manages server responses (html, json?)
-class Response {
-
-	//Should use %e instead of %d, but i get no ouput at all using that..
-	private function customDate() {
-		setlocale(LC_ALL, 'swedish');
-		// setlocale(LC_ALL, 'sv_SE.UTF-8');
-
-		return utf8_encode(ucfirst(strftime('%A, den %d %B %Y. '))) . strftime('Klockan är [%H:%M:%S].');
-		// return ucfirst(strftime('%A, den %d %B %Y. ')) . strftime('Klockan är [%H:%M:%S].');
-	}
-
+//Sends out html for the client
+class Response
+{
 	//Renders html page
-	public function HTMLPage($body, $notifyView) {
-		if ($body === NULL) {
+	public function HTMLPage($body, $notifyView)
+    {
+		if ($body === NULL)
+        {
 			throw new Exception('HTMLView::echoHTML does not allow body to be null');
 		}
 
 		$notifications = '';
 
 		//Don't fetch notifications on post, these pages should never be shown
-		if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+		if ($_SERVER['REQUEST_METHOD'] == 'GET')
+        {
 			$notifications = $notifyView->showAll();
 		}
 
-		$date = $this->customDate();
-		
 		echo "
 			<!DOCTYPE html>
 			<html>
@@ -38,15 +29,15 @@ class Response {
 			</head>
 			<body>
                 <div class='container'>
-                    <div class='jumbotron'>
-                        <h1>Welcome to Trivquest</h1>
-                        <p>Test your knowledge...</p>
-                      </div>
-				$notifications
-				$body
+                    <div class='page-header'>
+                      <h1>Welcome to Trivquest</h1>
+                      <h3>Test your knowledge...</h3>
+                    </div>
+                    $notifications
+                    $body
 				    <br />
                     <div class='text-center marginb'>
-                        $date
+                        <h5>Application created by Kevin Madsen</h5>
                     </div>
 				    <hr>
 				</div>
